@@ -1,0 +1,30 @@
+{
+  "name": "vue-script2",
+  "version": "1.0.0",
+  "description": "TODO this",
+  "main": "dist/index.js",
+  "jsnext:main": "dist/my-package.es2015.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Greg Slepak",
+  "license": "GPL-3.0",
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "dist/*"
+    ]
+  },
+  "devDependencies": {
+    "babel-core": "6.8.0",
+    "babel-eslint": "6.0.4",
+    "babel-preset-es2015-rollup": "1.1.1",
+    "grunt": "1.0.1",
+    "grunt-check-dependencies": "0.12.0",
+    "grunt-rollup": "0.7.1",
+    "grunt-standard": "2.0.0",
+    "load-grunt-tasks": "3.5.0",
+    "rollup-plugin-babel": "2.4.0",
+    "rollup-plugin-uglify": "0.3.1"
+  }
+}
