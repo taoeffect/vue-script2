@@ -69,7 +69,7 @@ __Special support for `async` attribute__
 
 Although technically all scripts are inserted with `s.async = false` (since we're using `document.write`, see [this wonderful article](http://www.html5rocks.com/en/tutorials/speed/script-loading/) by [Jake Archibald](https://twitter.com/jaffathecake) for details), setting the `async` attribute does make a meaningful difference.
 
-By default, the loading of `<script2>` tags is serialized using promises so that one script load serially. If you don't care about the loading order, add `async` to have the script injected into the page immediately.
+By default, the loading of `<script2>` tags is serialized using promises so that one script loads after another has finished. If you don't care about the loading order, add `async` to have the script injected into the page immediately.
 
 You can mix and match so that some `<script2>` tags are loaded immediately while others wait for the ones before them:
 
