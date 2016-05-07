@@ -6,7 +6,7 @@ It's meant for internal use, not for standalone components that are being shared
 
 ## Features
 
-- Just like `<script>` except with a `2`!<sup>1</sup>
+- Just like `<script>` except with a `2`, but [even that can be fixed!](#using-script-via-browserify-transform)
 - Keep your `app.js` bundle small!
 - Embrace Web Standards™ everyone knows and loves!
 - Easy for web designers to pick up! If you know HTML, you already know how to use it!
@@ -29,6 +29,8 @@ Vue.use(require('vue-script2'))
 ```
 
 ## Usage
+
+*Note: all of the examples below use `<script2>`, but you can write `<script>` instead by using the [`script2ify` browserify transform provided below!](#using-script-via-browserify-transform)* :smile:
 
 __Simple, Traditional, Asynchronous Loading of Scripts__
 
@@ -80,6 +82,32 @@ You can mix and match so that some `<script2>` tags are loaded immediately while
 <script2 src="lib.js" async></script2>
 ```
 
+## Using `<script>` via browserify transform
+
+The `script2ify` browserify transform below will (fairly safely) dynamically replace `<script>` tags with `<script2>` tags within `.ejs`, `.html`, and even `.vue` files!
+
+```js
+var through = require('through2')
+// This will replace <script> with <script2> in .html, .vue and .ejs files
+// EXCEPT:
+// - within <!-- comments -->
+// - top-level <script> tags within .vue files
+// Additional exclusion per: http://www.rexegg.com/regex-best-trick.html
+// Excluding <pre> tags did not seem to work, however.
+function script2ify (file) {
+  return !/\.(vue|html|ejs)$/.test(file) // edit to support other file types
+  ? through()
+  : through(function (buf, encoding, cb) {
+    // avoid replacing top-level <script> tags in .vue files
+    var regex = /\.vue$/.test(file)
+    ? /<!--.*?-->|^<script>|^<\/script>|(?:<(\/)?script([ >]))/gm
+    : /<!--.*?-->|(?:<(\/)?script([ >]))/gm
+    var replacement = (m, p1, p2) => p2 ? `<${p1 || ''}script2${p2}` : m
+    cb(null, buf.toString('utf8').replace(regex, replacement))
+  })
+}
+```
+
 ### TODO
 
 - [ ] Add tests + Travis CI. Not much to test though.
@@ -93,5 +121,3 @@ You can mix and match so that some `<script2>` tags are loaded immediately while
 # License
 
 [MIT](http://opensource.org/licenses/MIT)
-
-<sup>1</sup> *<span style="font-size:50%">If you don't like the `2` at the end, feel free to petition your favorite SPA framework to add native support.</span>*
