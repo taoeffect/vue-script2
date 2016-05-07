@@ -86,6 +86,7 @@ You can mix and match so that some `<script2>` tags are loaded immediately while
 
 ## History
 
+- __1.1.1__ - Identical to `1.1.0`, just adds needed package.json info.
 - __1.1.0__ - Adds special support for `async` attribute.
 - __1.0.0__ - Initial release.
 
