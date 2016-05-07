@@ -12,8 +12,7 @@ It's meant for internal use, not for standalone components that are being shared
 - Easy for web designers to pick up! If you know HTML, you already know how to use it!
 - Tiny! Only __996 bytes__! (min+gzip'd)
 - Perfect for use in `.ejs` templates or `.html` files!
-- No more including every library on every page!
-- No more complicated "code splitting" nonsense!
+- No more including every library on every page or complicated "code splitting"!
 - Ordered execution based on position in markup!
 - Special `unload` attribute can be used to keep your app's memory usage low!
 
@@ -41,6 +40,8 @@ Using `vue-script2` with [`vue-router`](https://github.com/vuejs/vue-router) is 
 
 Boom!
 
+And don't worry, `script2` won't re-download scripts if they're already loaded.
+
 __Delayed Execution of Inlined JavaScript__
 
 Want to run some JavaScript only when a certain "page"/route is loaded?
@@ -66,10 +67,10 @@ The `unload` attribute accepts JS expressions to run when the component is destr
 
 ### TODO
 
-- [ ] Add tests + Travis CI. Not much to test though. :smile:
+- [ ] Add tests + Travis CI. Not much to test though.
 
 # License
 
 [MIT](http://opensource.org/licenses/MIT)
 
-<sup>1</sup> *<span style="font-size:50%">If you don't like the `2` at the end, feel free to petition your favorite SPA framework to stop breaking the HTML standard! :smile:</span>*
+<sup>1</sup> *<span style="font-size:50%">If you don't like the `2` at the end, feel free to petition your favorite SPA framework to add native support.</span>*
