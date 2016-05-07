@@ -12,6 +12,10 @@
   "bugs": {
     "url": "https://github.com/taoeffect/vue-script2/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/taoeffect/vue-script2.git"
+  },
   "keywords": [
     "script",
     "injection",
