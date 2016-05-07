@@ -1,12 +1,3 @@
-// Using <script> to load vendor scripts does not (currently) work
-// with Vue.js's vue-router, see:
-//  https://github.com/vuejs/vue-router/issues/467
-//  https://github.com/okTurtles/group-income-simple/issues/64
-// So this simply re-creates that behavior.
-//
-// This Vue.js component fixes that and is globally available
-// in .ejs and .vue files.
-//
 // To use, just:
 //
 // 1. search-replace "<script " with "<script2 "
@@ -15,41 +6,8 @@
 var Script2 = {
   installed: false,
   p: Promise.resolve(),
+  version: '1.0.0', // grunt will over write to match package.json
   loaded: {} // keys are the scripts that have been loaded
-}
-
-var _ = {
-  isUndefined (x) { return x === undefined },
-  pick (o, props) {
-    var x = {}
-    props.forEach((k) => x[k] = o[k])
-    return x
-  },
-  omit (o, props) {
-    var x = {}
-    Object.keys(o).forEach((k) => { if (props.indexOf(k) === -1) x[k] = o[k] })
-    return x
-  },
-  omitBy (o, pred) {
-    var x = {}
-    Object.keys(o).forEach((k) => { if (!pred(o[k])) x[k] = o[k] })
-    return x
-  },
-  partialRight (f, ...partials) {
-    return function (...args) {
-      f(...args, ...partials)
-    }
-  },
-  assignWith (o, ...args) {
-    var customizer = args[args.length - 1]
-    args.pop()
-    args.forEach((s) => {
-      Object.keys(s).forEach((k) => {
-        let x = customizer(o[k], s[k], k, o, s)
-        if (x !== undefined) o[k] = x
-      })
-    })
-  }
 }
 
 Script2.install = function (Vue, options = {}) {
@@ -82,12 +40,8 @@ Script2.install = function (Vue, options = {}) {
     },
     destroyed () {
       if (this.unload) {
-        if (typeof this.unload === 'string') {
-          new Function(this.unload)() // eslint-disable-line
-          delete Script2.loaded[this.src]
-        } else {
-          throw new Error(`${this.name}: can't unload! attribute 'unload' must contain code!`)
-        }
+        new Function(this.unload)() // eslint-disable-line
+        delete Script2.loaded[this.src]
       }
     }
   })
@@ -95,14 +49,40 @@ Script2.install = function (Vue, options = {}) {
   Script2.installed = true
 }
 
+var _ = {
+  isUndefined (x) { return x === undefined },
+  pick (o, props) {
+    var x = {}
+    props.forEach((k) => x[k] = o[k])
+    return x
+  },
+  omit (o, props) {
+    var x = {}
+    Object.keys(o).forEach((k) => { if (props.indexOf(k) === -1) x[k] = o[k] })
+    return x
+  },
+  omitBy (o, pred) {
+    var x = {}
+    Object.keys(o).forEach((k) => { if (!pred(o[k])) x[k] = o[k] })
+    return x
+  },
+  // custom defaults function suited to our specific purpose
+  defaults2 (o, ...sources) {
+    sources.forEach((s) => {
+      Object.keys(s).forEach((k) => {
+        if ((_.isUndefined(o[k]) || o[k] === '') && s[k] !== '') {
+          o[k] = s[k]
+        }
+      })
+    })
+  }
+}
+
 function insertScript (el, src, opts = {}) {
   return new Promise(function (resolve, reject) {
     var s = document.createElement('script')
-    var defaults = _.partialRight(_.assignWith, (objVal, srcVal, key) =>
-      (_.isUndefined(objVal) || objVal === '') && srcVal !== '' ? srcVal : objVal
-    )
     // omit the special options that Script2 supports
-    defaults(s, _.omit(opts, ['unload']), {
+    _.defaults2(s, _.omit(opts, ['unload']), {
       type: 'text/javascript'
     })
     // according to: http://www.html5rocks.com/en/tutorials/speed/script-loading/
@@ -115,9 +95,10 @@ function insertScript (el, src, opts = {}) {
     // and: https://github.com/ded/script.js/blob/master/src/script.js#L70-L82
     function success () { resolve(src) }
     s.onload = success
-    s.onreadystatechange = () => { if (this.readyState === 'complete') success() } // IE
-    s.onerror = () => { console.error('failed to load:', src); reject(src) }
+    s.onreadystatechange = () => this.readyState === 'complete' && success() // IE
+    s.onerror = () => reject(new Error('failed to load:' + src))
     el.appendChild(s)
   })
 }
+
 export default Script2

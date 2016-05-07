@@ -2,13 +2,13 @@
   "name": "vue-script2",
   "version": "1.0.0",
   "description": "TODO this",
-  "main": "dist/index.js",
-  "jsnext:main": "dist/my-package.es2015.js",
+  "main": "dist/vue-script2.js",
+  "jsnext:main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Greg Slepak",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "standard": {
     "parser": "babel-eslint",
     "ignore": [
