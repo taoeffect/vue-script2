@@ -1,6 +1,6 @@
 /*!
   * vue-script2 v1.0.0
-  * (c) 2016-2016 Greg Slepak
+  * (c) 2016 Greg Slepak
   * @license MIT License
   */
 (function (global, factory) {

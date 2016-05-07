@@ -16,7 +16,7 @@ module.exports = function (grunt) {
   }
 
   var year = new Date().getFullYear()
-  year = year === '2016' ? year : `2016-${year}`
+  year = year === 2016 ? year : `2016-${year}`
   var banner = `/*!
   * ${pkg.name} v${pkg.version}
   * (c) ${year} Greg Slepak
