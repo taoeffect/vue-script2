@@ -10,7 +10,7 @@ It's meant for internal use, not for standalone components that are being shared
 - Keep your `app.js` bundle small!
 - Embrace Web Standards™ everyone knows and loves!
 - Easy for web designers to pick up! If you know HTML, you already know how to use it!
-- Tiny! Only __996 bytes__! (min+gzip'd)
+- Tiny! Only __1kb__! (min+gzip'd)
 - Perfect for use in `.ejs` templates or `.html` files!
 - No more including every library on every page or complicated "code splitting"!
 - Ordered execution based on position in markup!
@@ -65,9 +65,29 @@ The `unload` attribute accepts JS expressions to run when the component is destr
 <script2 src="/path/to/jquery.min.js" unload="jQuery.noConflict(true)"></script2>
 ```
 
+__Special support for `async` attribute__
+
+Although technically all scripts are inserted with `s.async = false` (since we're using `document.write`, see [this wonderful article](http://www.html5rocks.com/en/tutorials/speed/script-loading/) by [Jake Archibald](https://twitter.com/jaffathecake) for details), setting the `async` attribute does make a meaningful difference.
+
+By default, the loading of `<script2>` tags is serialized using promises so that one script load serially. If you don't care about the loading order, add `async` to have the script injected into the page immediately.
+
+You can mix and match so that some `<script2>` tags are loaded immediately while others wait for the ones before them:
+
+```html
+<script2 src="jquery.min.js"></script2>
+<script2>$('#foo').text('hi!')</script2>
+<!-- Load next script immediately, don't wait for jQuery -->
+<script2 src="lib.js" async></script2>
+```
+
 ### TODO
 
 - [ ] Add tests + Travis CI. Not much to test though.
+
+## History
+
+- __1.1.0__ - Adds special support for `async` attribute.
+- __1.0.0__ - Initial release.
 
 # License
 

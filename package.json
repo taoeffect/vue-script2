@@ -1,13 +1,30 @@
 {
   "name": "vue-script2",
-  "version": "1.0.0",
-  "description": "TODO this",
+  "version": "1.1.0",
+  "description": "Standardized, designer-friendly <script> behavior for your Single Page App",
   "main": "dist/vue-script2.js",
   "jsnext:main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Greg Slepak",
+  "homepage": "https://github.com/taoeffect/vue-script2",
+  "bugs": {
+    "url": "https://github.com/taoeffect/vue-script2/issues"
+  },
+  "keywords": [
+    "script",
+    "injection",
+    "asynchronous",
+    "async",
+    "loading",
+    "loader",
+    "spa",
+    "vuejs",
+    "vue",
+    "plugin",
+    "component"
+  ],
   "license": "MIT",
   "standard": {
     "parser": "babel-eslint",

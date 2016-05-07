@@ -1,5 +1,5 @@
 /*!
-  * vue-script2 v1.0.0
+  * vue-script2 v1.1.0
   * (c) 2016 Greg Slepak
   * @license MIT License
   */
@@ -17,7 +17,7 @@
   var Script2 = {
     installed: false,
     p: Promise.resolve(),
-    version: '1.0.0', // grunt will over write to match package.json
+    version: '1.1.0', // grunt will over write to match package.json
     loaded: {} // keys are the scripts that have been loaded
   };
 
@@ -27,9 +27,10 @@
     if (Script2.installed) return;
     var customAttrs = ['unload'];
     // from: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
-    // don't have 'async' or 'defer' bc those don't allow document.write according to:
+    // 'async' and 'defer' don't allow document.write according to:
     // http://www.html5rocks.com/en/tutorials/speed/script-loading/
-    var props = customAttrs.concat(['src', 'type', 'integrity', 'text', 'crossorigin']);
+    // we ignore 'defer' and handle 'async' specially.
+    var props = customAttrs.concat(['src', 'type', 'async', 'integrity', 'text', 'crossorigin']);
     Vue.component('script2', {
       props: props,
       // <slot> is important, see: http://vuejs.org/guide/components.html#Named-Slots
@@ -47,11 +48,14 @@
           });
         } else if (!Script2.loaded[this.src]) {
           var params = _.omitBy(_.pick(this, props), _.isUndefined);
-          Script2.loaded[this.src] = true;
-          // seralizes execution. note this syntax does an implicit return
-          Script2.p = Script2.p.then(function () {
-            return insertScript(parent, _this.src, params);
-          });
+          // this syntax results in an implicit return
+          var load = function load() {
+            return inject(parent, _this.src, params).then(function () {
+              return Script2.loaded[_this.src] = 1;
+            });
+          };
+          _.isUndefined(this.async) ? Script2.p = Script2.p.then(load) // serialize execution
+          : load(); // inject immediately
         }
         Vue.util.remove(this.$el); // remove dummy template <div>
       },
@@ -108,7 +112,7 @@
     }
   };
 
-  function insertScript(el, src) {
+  function inject(el, src) {
     var opts = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
     return new Promise(function (resolve, reject) {
