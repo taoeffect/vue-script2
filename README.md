@@ -114,6 +114,7 @@ function script2ify (file) {
 
 ## History
 
+- __1.1.2__ - Another bump to get npm.org to display `script2ify` in the README
 - __1.1.1__ - Identical to `1.1.0`, just adds needed package.json info.
 - __1.1.0__ - Adds special support for `async` attribute.
 - __1.0.0__ - Initial release.

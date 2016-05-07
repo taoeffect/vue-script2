@@ -1,5 +1,5 @@
 /*!
-  * vue-script2 v1.1.1
+  * vue-script2 v1.1.2
   * (c) 2016 Greg Slepak
   * @license MIT License
   */
@@ -17,7 +17,7 @@
   var Script2 = {
     installed: false,
     p: Promise.resolve(),
-    version: '1.1.1', // grunt will over write to match package.json
+    version: '1.1.2', // grunt will over write to match package.json
     loaded: {} // keys are the scripts that have been loaded
   };
 
