@@ -19,7 +19,7 @@ VueScript2 is primarily for internal use and not for standalone components that 
 - No more including every library on every page or complicated "code splitting"!
 - Ordered execution based on position in markup!
 - Special [`unload` attribute](#cleanup-unused-resources-with-the-unload-attribute) can be used to keep your app's memory usage low!
-- Does [imperative loading](#promise-based-imperative-loading-too) too, no need for RequireJS/SystemJS/etc.!
+- Does [imperative loading](#promise-based-imperative-loading-too) too!
 
 Oh, and it's easy to modify this library to also support imperative loading of 
 
@@ -53,7 +53,7 @@ And don't worry, `script2` won't re-download scripts if they're already loaded.
 
 ##### Promise-based imperative loading too!
 
-No need to bundle RequireJS/SystemJS or whatever else. Call `VueScript2.load` to immediately load a script.
+Imperatively load scripts with `VueScript2.load`:
 
 ```js
 VueScript2.load('/path/to/jquery.min.js').then(function () {
@@ -61,7 +61,9 @@ VueScript2.load('/path/to/jquery.min.js').then(function () {
 })
 ```
 
-_All scripts injected using `VueScript2.load` are [`async`](#special-support-for-async-attribute)._
+For 99% of use-cases this is totally sufficient and you do not need the overhead of RequireJS or SystemJS or whatever else. That's especially true given that Vue.js is normally used with Browserify or Webpack, which handle that for you.
+
+_NOTE: scripts injected using `VueScript2.load` are always [`async`](#special-support-for-async-attribute)._
 
 ##### Delayed execution of inlined JavaScript
 
