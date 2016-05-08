@@ -1,5 +1,5 @@
 /*!
-  * vue-script2 v1.1.2
+  * vue-script2 v1.2.0
   * (c) 2016 Greg Slepak
   * @license MIT License
   */
@@ -17,57 +17,85 @@
   var Script2 = {
     installed: false,
     p: Promise.resolve(),
-    version: '1.1.2', // grunt will over write to match package.json
-    loaded: {} // keys are the scripts that have been loaded
-  };
+    version: '1.2.0', // grunt will over write to match package.json
+    loaded: {}, // keys are the scripts that have been loaded
+    install: function install(Vue) {
+      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-  Script2.install = function (Vue) {
-    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+      if (Script2.installed) return;
+      var customAttrs = ['unload'];
+      // from: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
+      // 'async' and 'defer' don't allow document.write according to:
+      // http://www.html5rocks.com/en/tutorials/speed/script-loading/
+      // we ignore 'defer' and handle 'async' specially.
+      var props = customAttrs.concat(['src', 'type', 'async', 'integrity', 'text', 'crossorigin']);
+      Vue.component('script2', {
+        props: props,
+        // <slot> is important, see: http://vuejs.org/guide/components.html#Named-Slots
+        template: '<div style="display:none"><slot></slot></div>',
+        ready: function ready() {
+          var _this = this;
 
-    if (Script2.installed) return;
-    var customAttrs = ['unload'];
-    // from: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
-    // 'async' and 'defer' don't allow document.write according to:
-    // http://www.html5rocks.com/en/tutorials/speed/script-loading/
-    // we ignore 'defer' and handle 'async' specially.
-    var props = customAttrs.concat(['src', 'type', 'async', 'integrity', 'text', 'crossorigin']);
-    Vue.component('script2', {
-      props: props,
-      // <slot> is important, see: http://vuejs.org/guide/components.html#Named-Slots
-      template: '<div style="display:none"><slot></slot></div>',
-      ready: function ready() {
-        var _this = this;
-
-        var parent = this.$el.parentElement;
-        if (!this.src) {
-          Script2.p = Script2.p.then(function () {
-            var s = document.createElement('script');
-            s.type = 'text/javascript';
-            s.appendChild(document.createTextNode(_this.$el.innerHTML));
-            parent.appendChild(s);
-          });
-        } else if (!Script2.loaded[this.src]) {
-          var params = _.omitBy(_.pick(this, props), _.isUndefined);
-          // this syntax results in an implicit return
-          var load = function load() {
-            return inject(parent, _this.src, params).then(function () {
-              return Script2.loaded[_this.src] = 1;
+          var parent = this.$el.parentElement;
+          if (!this.src) {
+            Script2.p = Script2.p.then(function () {
+              var s = document.createElement('script');
+              s.type = 'text/javascript';
+              s.appendChild(document.createTextNode(_this.$el.innerHTML));
+              parent.appendChild(s);
             });
-          };
-          _.isUndefined(this.async) ? Script2.p = Script2.p.then(load) // serialize execution
-          : load(); // inject immediately
+          } else {
+            var opts = _.omitBy(_.pick(this, props), _.isUndefined);
+            opts.parent = parent;
+            // this syntax results in an implicit return
+            var load = function load() {
+              return Script2.load(_this.src, opts);
+            };
+            _.isUndefined(this.async) ? Script2.p = Script2.p.then(load) // serialize execution
+            : load(); // inject immediately
+          }
+          Vue.util.remove(this.$el); // remove dummy template <div>
+        },
+        destroyed: function destroyed() {
+          if (this.unload) {
+            new Function(this.unload)(); // eslint-disable-line
+            delete Script2.loaded[this.src];
+          }
         }
-        Vue.util.remove(this.$el); // remove dummy template <div>
-      },
-      destroyed: function destroyed() {
-        if (this.unload) {
-          new Function(this.unload)(); // eslint-disable-line
-          delete Script2.loaded[this.src];
-        }
-      }
-    });
+      });
+      Script2.installed = true;
+    },
+    load: function load(src) {
+      var opts = arguments.length <= 1 || arguments[1] === undefined ? { parent: document.head } : arguments[1];
 
-    Script2.installed = true;
+      if (Script2.loaded[src]) return Promise.resolve(src);
+      return new Promise(function (resolve, reject) {
+        var _this2 = this;
+
+        var s = document.createElement('script');
+        // omit the special options that Script2 supports
+        _.defaults2(s, _.omit(opts, ['unload', 'parent']), { type: 'text/javascript' });
+        // according to: http://www.html5rocks.com/en/tutorials/speed/script-loading/
+        // async does not like 'document.write' usage, which we & vue.js make
+        // heavy use of based on the SPA style. Also, async can result
+        // in code getting executed out of order from how it is inlined on the page.
+        s.async = false; // therefore set this to false
+        s.src = src;
+        // inspiration from: https://github.com/eldargab/load-script/blob/master/index.js
+        // and: https://github.com/ded/script.js/blob/master/src/script.js#L70-L82
+        function success() {
+          Script2.loaded[src] = 1;resolve(src);
+        }
+        s.onload = success;
+        s.onreadystatechange = function () {
+          return _this2.readyState === 'complete' && success();
+        }; // IE
+        s.onerror = function () {
+          return reject(new Error(src));
+        };
+        opts.parent.appendChild(s);
+      });
+    }
   };
 
   var _ = {
@@ -104,46 +132,11 @@
 
       sources.forEach(function (s) {
         Object.keys(s).forEach(function (k) {
-          if ((_.isUndefined(o[k]) || o[k] === '') && s[k] !== '') {
-            o[k] = s[k];
-          }
+          if (_.isUndefined(o[k]) || o[k] === '') o[k] = s[k];
         });
       });
     }
   };
-
-  function inject(el, src) {
-    var opts = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-    return new Promise(function (resolve, reject) {
-      var _this2 = this;
-
-      var s = document.createElement('script');
-      // omit the special options that Script2 supports
-      _.defaults2(s, _.omit(opts, ['unload']), {
-        type: 'text/javascript'
-      });
-      // according to: http://www.html5rocks.com/en/tutorials/speed/script-loading/
-      // async does not like 'document.write' usage, which we & vue.js make
-      // heavy use of based on the SPA style. Also, async can result
-      // in code getting executed out of order from how it is inlined on the page.
-      s.async = false; // therefore set this to false
-      s.src = src;
-      // inspiration from: https://github.com/eldargab/load-script/blob/master/index.js
-      // and: https://github.com/ded/script.js/blob/master/src/script.js#L70-L82
-      function success() {
-        resolve(src);
-      }
-      s.onload = success;
-      s.onreadystatechange = function () {
-        return _this2.readyState === 'complete' && success();
-      }; // IE
-      s.onerror = function () {
-        return reject(new Error('failed to load:' + src));
-      };
-      el.appendChild(s);
-    });
-  }
 
   return Script2;
 

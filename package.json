@@ -1,7 +1,7 @@
 {
   "name": "vue-script2",
-  "version": "1.1.2",
-  "description": "Standardized, designer-friendly <script> behavior for your Single Page App",
+  "version": "1.2.0",
+  "description": "Brings back <script> to your favorite Single Page App!",
   "main": "dist/vue-script2.js",
   "jsnext:main": "src/index.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "async",
     "loading",
     "loader",
+    "load",
     "spa",
     "vuejs",
     "vue",
