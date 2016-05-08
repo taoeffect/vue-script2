@@ -1,12 +1,7 @@
-// To use, just:
-//
-// 1. search-replace "<script " with "<script2 "
-// 2. search-replace "</script>" with "</script2>"
-
 var Script2 = {
   installed: false,
   p: Promise.resolve(),
-  version: '1.2.0', // grunt will overwrite to match package.json
+  version: '1.2.1', // grunt will overwrite to match package.json
   loaded: {}, // keys are the scripts that have been loaded
   install (Vue, options = {}) {
     if (Script2.installed) return
@@ -63,9 +58,9 @@ var Script2 = {
       s.src = src
       // inspiration from: https://github.com/eldargab/load-script/blob/master/index.js
       // and: https://github.com/ded/script.js/blob/master/src/script.js#L70-L82
-      function success () { Script2.loaded[src] = 1; resolve(src) }
-      s.onload = success
-      s.onreadystatechange = () => this.readyState === 'complete' && success() // IE
+      s.onload = () => { Script2.loaded[src] = 1; resolve(src) }
+      // IE should now support onerror and onload. If necessary, take a look
+      // at this to add older IE support: http://stackoverflow.com/a/4845802/1781435
       s.onerror = () => reject(new Error(src))
       opts.parent.appendChild(s)
     })

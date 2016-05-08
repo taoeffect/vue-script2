@@ -135,6 +135,7 @@ function script2ify (file) {
 
 ## History
 
+- __1.2.1__ - Just a bit of perfectionism to fix a non-issue issue
 - __1.2.0__ - Added `VueScript2.load` imperative loading
 - __1.1.2__ - Another bump to get npm.org to display `script2ify` in the README
 - __1.1.1__ - Identical to `1.1.0`, just adds needed package.json info.

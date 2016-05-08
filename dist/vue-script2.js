@@ -1,5 +1,5 @@
 /*!
-  * vue-script2 v1.2.0
+  * vue-script2 v1.2.1
   * (c) 2016 Greg Slepak
   * @license MIT License
   */
@@ -9,15 +9,10 @@
   (global.VueScript2 = factory());
 }(this, function () { 'use strict';
 
-  // To use, just:
-  //
-  // 1. search-replace "<script " with "<script2 "
-  // 2. search-replace "</script>" with "</script2>"
-
   var Script2 = {
     installed: false,
     p: Promise.resolve(),
-    version: '1.2.0', // grunt will overwrite to match package.json
+    version: '1.2.1', // grunt will overwrite to match package.json
     loaded: {}, // keys are the scripts that have been loaded
     install: function install(Vue) {
       var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
@@ -69,8 +64,6 @@
       var opts = arguments.length <= 1 || arguments[1] === undefined ? { parent: document.head } : arguments[1];
 
       return Script2.loaded[src] ? Promise.resolve(src) : new Promise(function (resolve, reject) {
-        var _this2 = this;
-
         var s = document.createElement('script');
         // omit the special options that Script2 supports
         _.defaults2(s, _.omit(opts, ['unload', 'parent']), { type: 'text/javascript' });
@@ -82,13 +75,11 @@
         s.src = src;
         // inspiration from: https://github.com/eldargab/load-script/blob/master/index.js
         // and: https://github.com/ded/script.js/blob/master/src/script.js#L70-L82
-        function success() {
+        s.onload = function () {
           Script2.loaded[src] = 1;resolve(src);
-        }
-        s.onload = success;
-        s.onreadystatechange = function () {
-          return _this2.readyState === 'complete' && success();
-        }; // IE
+        };
+        // IE should now support onerror and onload. If necessary, take a look
+        // at this to add older IE support: http://stackoverflow.com/a/4845802/1781435
         s.onerror = function () {
           return reject(new Error(src));
         };
