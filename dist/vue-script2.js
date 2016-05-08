@@ -68,8 +68,7 @@
     load: function load(src) {
       var opts = arguments.length <= 1 || arguments[1] === undefined ? { parent: document.head } : arguments[1];
 
-      if (Script2.loaded[src]) return Promise.resolve(src);
-      return new Promise(function (resolve, reject) {
+      return Script2.loaded[src] ? Promise.resolve(src) : new Promise(function (resolve, reject) {
         var _this2 = this;
 
         var s = document.createElement('script');

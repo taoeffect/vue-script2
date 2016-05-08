@@ -50,8 +50,8 @@ var Script2 = {
     Script2.installed = true
   },
   load (src, opts = {parent: document.head}) {
-    if (Script2.loaded[src]) return Promise.resolve(src)
-    return new Promise(function (resolve, reject) {
+    return Script2.loaded[src] ? Promise.resolve(src)
+    : new Promise(function (resolve, reject) {
       var s = document.createElement('script')
       // omit the special options that Script2 supports
       _.defaults2(s, _.omit(opts, ['unload', 'parent']), {type: 'text/javascript'})
