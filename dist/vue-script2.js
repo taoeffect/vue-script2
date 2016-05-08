@@ -17,7 +17,7 @@
   var Script2 = {
     installed: false,
     p: Promise.resolve(),
-    version: '1.2.0', // grunt will over write to match package.json
+    version: '1.2.0', // grunt will overwrite to match package.json
     loaded: {}, // keys are the scripts that have been loaded
     install: function install(Vue) {
       var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];

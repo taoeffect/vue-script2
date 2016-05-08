@@ -2,7 +2,7 @@
 
 VueScript2 brings back the `<script>` tag to your SPA (Single Page App)!
 
-This tiny library should take care of all your [declarative](#familiar-declarative-asynchronous-loading-of-scripts) and [imperative](#promise-based-imperative-loading-too) asynchronous loading needs. Web designers can rest easy that their existing knowledge of web development is still useful!
+This tiny library should take care of all your [declarative](#familiar-declarative-asynchronous-loading-of-scripts) and [imperative](#promise-based-imperative-loading-too) asynchronous loading needs. Web designers can rest easy knowing their existing knowledge of web development is still useful!
 
 This version is tailored for the [Vue.js](http://vuejs.org) framework, but it's easy to port to [Riot.js](http://riotjs.com) and others.
 
@@ -61,7 +61,7 @@ VueScript2.load('/path/to/jquery.min.js').then(function () {
 })
 ```
 
-For 99% of use-cases this is totally sufficient and you do not need the overhead of RequireJS or SystemJS or whatever else. That's especially true given that Vue.js is normally used with Browserify or Webpack, which handle that for you.
+For 99% of use-cases this is totally sufficient and you do not need the overhead of RequireJS or SystemJS or whatever else. That's especially true given that Vue.js is normally used with Browserify or Webpack, which handle complicated dependency management for you.
 
 _NOTE: scripts injected using `VueScript2.load` are always [`async`](#special-support-for-async-attribute)._
 
