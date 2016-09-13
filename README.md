@@ -21,7 +21,7 @@ VueScript2 is primarily for internal use and not for standalone components that 
 - Special [`unload` attribute](#cleanup-unused-resources-with-the-unload-attribute) can be used to keep your app's memory usage low!
 - Does [imperative loading](#promise-based-imperative-loading-too) too!
 
-Oh, and it's easy to modify this library to also support imperative loading of 
+Oh, and it's easy to modify this library to also support imperative loading of
 
 ## Installation
 
@@ -135,6 +135,7 @@ function script2ify (file) {
 
 ## History
 
+- __1.2.2__ - Fixes broken `crossorigin` attribute (thx @grempe!)
 - __1.2.1__ - Just a bit of perfectionism to fix a non-issue issue
 - __1.2.0__ - Added `VueScript2.load` imperative loading
 - __1.1.2__ - Another bump to get npm.org to display `script2ify` in the README

@@ -1,5 +1,5 @@
 /*!
-  * vue-script2 v1.2.1
+  * vue-script2 v1.2.2
   * (c) 2016 Greg Slepak
   * @license MIT License
   */
@@ -12,7 +12,7 @@
   var Script2 = {
     installed: false,
     p: Promise.resolve(),
-    version: '1.2.1', // grunt will overwrite to match package.json
+    version: '1.2.2', // grunt will overwrite to match package.json
     loaded: {}, // keys are the scripts that have been loaded
     install: function install(Vue) {
       var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
@@ -73,6 +73,9 @@
         // in code getting executed out of order from how it is inlined on the page.
         s.async = false; // therefore set this to false
         s.src = src;
+        // crossorigin in HTML and crossOrigin in the DOM per HTML spec
+        // https://html.spec.whatwg.org/multipage/embedded-content.html#dom-img-crossorigin
+        s.crossOrigin = opts.crossorigin;
         // inspiration from: https://github.com/eldargab/load-script/blob/master/index.js
         // and: https://github.com/ded/script.js/blob/master/src/script.js#L70-L82
         s.onload = function () {
