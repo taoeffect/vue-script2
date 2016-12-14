@@ -8,6 +8,8 @@ This version is tailored for the [Vue.js](http://vuejs.org) framework, but it's 
 
 VueScript2 is primarily for internal use and not for standalone components that are being shared publicly. Those should be "self-contained" and come with all the JS they need.
 
+***NOTE:*** _Requires Vue 2.x. Use version 1.2.2 for Vue 1.x._
+
 ## Features
 
 - Just like `<script>` except with a `2`, but [even that can be fixed!](#writing-script-instead-of-script2-using-script2ify)
@@ -20,8 +22,6 @@ VueScript2 is primarily for internal use and not for standalone components that 
 - Ordered execution based on position in markup!
 - Special [`unload` attribute](#cleanup-unused-resources-with-the-unload-attribute) can be used to keep your app's memory usage low!
 - Does [imperative loading](#promise-based-imperative-loading-too) too!
-
-Oh, and it's easy to modify this library to also support imperative loading of
 
 ## Installation
 
@@ -135,6 +135,7 @@ function script2ify (file) {
 
 ## History
 
+- __2.0.0__ - Vue 2.x compatible. Requires Vue 2.x. Use 1.2.2 for Vue 1.x.
 - __1.2.2__ - Fixes broken `crossorigin` attribute (thx @grempe!)
 - __1.2.1__ - Just a bit of perfectionism to fix a non-issue issue
 - __1.2.0__ - Added `VueScript2.load` imperative loading

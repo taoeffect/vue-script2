@@ -1,7 +1,7 @@
 var Script2 = {
   installed: false,
   p: Promise.resolve(),
-  version: '1.2.2', // grunt will overwrite to match package.json
+  version: '2.0.0', // grunt will overwrite to match package.json
   loaded: {}, // keys are the scripts that have been loaded
   install (Vue, options = {}) {
     if (Script2.installed) return
@@ -15,7 +15,9 @@ var Script2 = {
       props: props,
       // <slot> is important, see: http://vuejs.org/guide/components.html#Named-Slots
       template: '<div style="display:none"><slot></slot></div>',
-      ready () {
+      // NOTE: I tried doing this with Vue 2's new render() function.
+      //       It was a nightmare and I never got it to work.
+      mounted () {
         var parent = this.$el.parentElement
         if (!this.src) {
           Script2.p = Script2.p.then(() => {
@@ -33,7 +35,11 @@ var Script2 = {
             ? Script2.p = Script2.p.then(load) // serialize execution
             : load()                           // inject immediately
         }
-        Vue.util.remove(this.$el) // remove dummy template <div>
+        // see: https://vuejs.org/v2/guide/migration.html#ready-replaced
+        this.$nextTick(() => {
+          // code that assumes this.$el is in-document
+          this.$el.remove() // remove dummy template <div>
+        })
       },
       destroyed () {
         if (this.unload) {
