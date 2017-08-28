@@ -64,7 +64,9 @@ var Script2 = {
       s.src = src
       // crossorigin in HTML and crossOrigin in the DOM per HTML spec
       // https://html.spec.whatwg.org/multipage/embedded-content.html#dom-img-crossorigin
-      s.crossOrigin = opts.crossorigin
+      if (opts.crossorigin) {
+        s.crossOrigin = opts.crossorigin
+      }
       // inspiration from: https://github.com/eldargab/load-script/blob/master/index.js
       // and: https://github.com/ded/script.js/blob/master/src/script.js#L70-L82
       s.onload = () => { Script2.loaded[src] = 1; resolve(src) }
