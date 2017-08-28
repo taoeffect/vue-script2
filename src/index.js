@@ -1,7 +1,7 @@
 var Script2 = {
   installed: false,
   p: Promise.resolve(),
-  version: '2.0.0', // grunt will overwrite to match package.json
+  version: '2.0.1', // grunt will overwrite to match package.json
   loaded: {}, // keys are the scripts that have been loaded
   install (Vue, options = {}) {
     if (Script2.installed) return
