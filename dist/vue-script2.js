@@ -1,13 +1,13 @@
 /*!
   * vue-script2 v2.0.1
-  * (c) 2016-2017 Greg Slepak
+  * (c) 2016-2018 Greg Slepak
   * @license MIT License
   */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global.VueScript2 = factory());
-}(this, function () { 'use strict';
+}(this, (function () { 'use strict';
 
   var Script2 = {
     installed: false,
@@ -15,8 +15,6 @@
     version: '2.0.1', // grunt will overwrite to match package.json
     loaded: {}, // keys are the scripts that have been loaded
     install: function install(Vue) {
-      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
       if (Script2.installed) return;
       var customAttrs = ['unload'];
       // from: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
@@ -54,7 +52,7 @@
           // see: https://vuejs.org/v2/guide/migration.html#ready-replaced
           this.$nextTick(function () {
             // code that assumes this.$el is in-document
-            _this.$el.remove(); // remove dummy template <div>
+            _this.$el.parentElement.removeChild(_this.$el); // remove dummy template <div>
           });
         },
         destroyed: function destroyed() {
@@ -67,7 +65,7 @@
       Script2.installed = true;
     },
     load: function load(src) {
-      var opts = arguments.length <= 1 || arguments[1] === undefined ? { parent: document.head } : arguments[1];
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { parent: document.head };
 
       return Script2.loaded[src] ? Promise.resolve(src) : new Promise(function (resolve, reject) {
         var s = document.createElement('script');
@@ -141,4 +139,4 @@
 
   return Script2;
 
-}));
+})));

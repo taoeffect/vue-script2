@@ -38,7 +38,7 @@ var Script2 = {
         // see: https://vuejs.org/v2/guide/migration.html#ready-replaced
         this.$nextTick(() => {
           // code that assumes this.$el is in-document
-          this.$el.remove() // remove dummy template <div>
+          this.$el.parentElement.removeChild(this.$el) // remove dummy template <div>
         })
       },
       destroyed () {
