@@ -47,7 +47,7 @@ var Script2 = {
           delete Script2.loaded[this.src]
         }
       },
-      render(h) { return h('div', {style: 'display:none'}, this.$slots.default) }
+      render (h) { return h('div', {style: 'display:none'}, this.$slots.default) }
     })
     Script2.installed = true
   },
