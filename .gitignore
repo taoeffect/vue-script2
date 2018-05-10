@@ -6,4 +6,3 @@ node_modules
 *.swp
 *~
 *.ignore
-yarn.lock
