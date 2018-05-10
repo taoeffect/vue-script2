@@ -14,7 +14,7 @@ var Script2 = {
     Vue.component('script2', {
       props: props,
       // <slot> is important, see: http://vuejs.org/guide/components.html#Named-Slots
-      template: '<div style="display:none"><slot></slot></div>',
+      // template: '<div style="display:none"><slot></slot></div>',
       // NOTE: I tried doing this with Vue 2's new render() function.
       //       It was a nightmare and I never got it to work.
       mounted () {
@@ -46,7 +46,8 @@ var Script2 = {
           new Function(this.unload)() // eslint-disable-line
           delete Script2.loaded[this.src]
         }
-      }
+      },
+      render(h) { return h('div', {style: 'display:none'}, this.$slots.default) }
     })
     Script2.installed = true
   },
