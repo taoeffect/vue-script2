@@ -1,21 +1,20 @@
 /*!
-  * vue-script2 v2.0.1
-  * (c) 2016-2017 Greg Slepak
+  * vue-script2 v2.0.2
+  * (c) 2016-2018 Greg Slepak
   * @license MIT License
   */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global.VueScript2 = factory());
-}(this, function () { 'use strict';
+}(this, (function () { 'use strict';
 
   var Script2 = {
     installed: false,
     p: Promise.resolve(),
-    version: '2.0.1', // grunt will overwrite to match package.json
+    version: '2.0.2', // grunt will overwrite to match package.json
     loaded: {}, // keys are the scripts that have been loaded
     install: function install(Vue) {
-      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
       if (Script2.installed) return;
       var customAttrs = ['unload'];
@@ -27,9 +26,11 @@
       Vue.component('script2', {
         props: props,
         // <slot> is important, see: http://vuejs.org/guide/components.html#Named-Slots
-        template: '<div style="display:none"><slot></slot></div>',
-        // NOTE: I tried doing this with Vue 2's new render() function.
-        //       It was a nightmare and I never got it to work.
+        // template: '<div style="display:none"><slot></slot></div>',
+        // NOTE: Instead of using `template` we can use the `render` function like so:
+        render: function render(h) {
+          return h('div', { style: 'display:none' }, this.$slots.default);
+        },
         mounted: function mounted() {
           var _this = this;
 
@@ -54,7 +55,9 @@
           // see: https://vuejs.org/v2/guide/migration.html#ready-replaced
           this.$nextTick(function () {
             // code that assumes this.$el is in-document
-            _this.$el.remove(); // remove dummy template <div>
+            // NOTE: we could've done this.$el.remove(), but IE sucks, see:
+            //       https://github.com/taoeffect/vue-script2/pull/17
+            _this.$el.parentElement.removeChild(_this.$el); // remove dummy template <div>
           });
         },
         destroyed: function destroyed() {
@@ -67,7 +70,7 @@
       Script2.installed = true;
     },
     load: function load(src) {
-      var opts = arguments.length <= 1 || arguments[1] === undefined ? { parent: document.head } : arguments[1];
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { parent: document.head };
 
       return Script2.loaded[src] ? Promise.resolve(src) : new Promise(function (resolve, reject) {
         var s = document.createElement('script');
@@ -106,7 +109,7 @@
     pick: function pick(o, props) {
       var x = {};
       props.forEach(function (k) {
-        return x[k] = o[k];
+        x[k] = o[k];
       });
       return x;
     },
@@ -141,4 +144,4 @@
 
   return Script2;
 
-}));
+})));

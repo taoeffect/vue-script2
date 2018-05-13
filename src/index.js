@@ -1,7 +1,7 @@
 var Script2 = {
   installed: false,
   p: Promise.resolve(),
-  version: '2.0.1', // grunt will overwrite to match package.json
+  version: '2.0.2', // grunt will overwrite to match package.json
   loaded: {}, // keys are the scripts that have been loaded
   install (Vue, options = {}) {
     if (Script2.installed) return
@@ -15,8 +15,8 @@ var Script2 = {
       props: props,
       // <slot> is important, see: http://vuejs.org/guide/components.html#Named-Slots
       // template: '<div style="display:none"><slot></slot></div>',
-      // NOTE: I tried doing this with Vue 2's new render() function.
-      //       It was a nightmare and I never got it to work.
+      // NOTE: Instead of using `template` we can use the `render` function like so:
+      render (h) { return h('div', {style: 'display:none'}, this.$slots.default) },
       mounted () {
         var parent = this.$el.parentElement
         if (!this.src) {
@@ -38,6 +38,8 @@ var Script2 = {
         // see: https://vuejs.org/v2/guide/migration.html#ready-replaced
         this.$nextTick(() => {
           // code that assumes this.$el is in-document
+          // NOTE: we could've done this.$el.remove(), but IE sucks, see:
+          //       https://github.com/taoeffect/vue-script2/pull/17
           this.$el.parentElement.removeChild(this.$el) // remove dummy template <div>
         })
       },
@@ -46,8 +48,7 @@ var Script2 = {
           new Function(this.unload)() // eslint-disable-line
           delete Script2.loaded[this.src]
         }
-      },
-      render (h) { return h('div', {style: 'display:none'}, this.$slots.default) }
+      }
     })
     Script2.installed = true
   },
@@ -83,7 +84,7 @@ var _ = {
   isUndefined (x) { return x === undefined },
   pick (o, props) {
     var x = {}
-    props.forEach((k) => x[k] = o[k])
+    props.forEach(k => { x[k] = o[k] })
     return x
   },
   omit (o, props) {

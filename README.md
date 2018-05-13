@@ -16,7 +16,7 @@ VueScript2 is primarily for internal use and not for standalone components that 
 - Keep your `app.js` bundle small!
 - Embrace Web Standards™ everyone knows and loves!
 - Easy for web designers to pick up! If you know HTML, you already know how to use it!
-- Tiny! Only __1kb__! (min+gzip'd)
+- Tiny! Less than __1kb__! (min+gzip'd)
 - Perfect for use in `.ejs` templates or `.html` files!
 - No more including every library on every page or complicated "code splitting"!
 - Ordered execution based on position in markup!
@@ -33,6 +33,15 @@ Then enable the plugin (in your `main.js` or wherever):
 
 ```js
 Vue.use(require('vue-script2'))
+```
+
+Or with `import`:
+
+```js
+import Vue from 'vue'
+import VS2 from 'vue-script2'
+
+Vue.use(VS2)
 ```
 
 ## Usage
@@ -129,21 +138,9 @@ function script2ify (file) {
 }
 ```
 
-### TODO
-
-- [ ] Add tests + Travis CI. Not much to test though.
-
 ## History
 
-- __2.0.1__ - `crossorigin` Safari fix (thanks [@mingchuno](https://github.com/mingchuno)!)
-- __2.0.0__ - Vue 2.x compatible. Requires Vue 2.x. Use 1.2.2 for Vue 1.x.
-- __1.2.2__ - Fixes broken `crossorigin` attribute (thx @grempe!)
-- __1.2.1__ - Just a bit of perfectionism to fix a non-issue issue
-- __1.2.0__ - Added `VueScript2.load` imperative loading
-- __1.1.2__ - Another bump to get npm.org to display `script2ify` in the README
-- __1.1.1__ - Identical to `1.1.0`, just adds needed package.json info.
-- __1.1.0__ - Adds special support for `async` attribute.
-- __1.0.0__ - Initial release.
+See [`CHANGELOG.md`](CHANGELOG.md)
 
 # License
 
