@@ -1,5 +1,5 @@
 /*!
-  * vue-script2 v2.0.2
+  * vue-script2 v2.0.3
   * (c) 2016-2018 Greg Slepak
   * @license MIT License
   */
@@ -12,7 +12,7 @@
   var Script2 = {
     installed: false,
     p: Promise.resolve(),
-    version: '2.0.2', // grunt will overwrite to match package.json
+    version: '2.0.3', // grunt will overwrite to match package.json
     loaded: {}, // keys are the scripts that have been loaded
     install: function install(Vue) {
 
@@ -38,8 +38,10 @@
           if (!this.src) {
             Script2.p = Script2.p.then(function () {
               var s = document.createElement('script');
+              var h = _this.$el.innerHTML;
+              h = h.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&amp;/gi, '&');
               s.type = 'text/javascript';
-              s.appendChild(document.createTextNode(_this.$el.innerHTML));
+              s.appendChild(document.createTextNode(h));
               parent.appendChild(s);
             });
           } else {

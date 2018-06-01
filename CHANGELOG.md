@@ -1,3 +1,7 @@
+### 2.0.3
+
+- Fix inline-source containing HTML entities (via **[@andrispraulitis](https://github.com/andrispraulitis)**)
+
 ### 2.0.2
 
 - IE Support (via **[@akhoury](https://github.com/akhoury)**)

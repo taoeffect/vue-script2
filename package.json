@@ -1,6 +1,6 @@
 {
   "name": "vue-script2",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Brings back <script> to your favorite Single Page App!",
   "main": "dist/vue-script2.js",
   "jsnext:main": "src/index.js",
