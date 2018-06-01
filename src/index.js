@@ -22,8 +22,10 @@ var Script2 = {
         if (!this.src) {
           Script2.p = Script2.p.then(() => {
             var s = document.createElement('script')
+            var h = this.$el.innerHTML
+            h = h.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&amp;/gi, '&')
             s.type = 'text/javascript'
-            s.appendChild(document.createTextNode(this.$el.innerHTML))
+            s.appendChild(document.createTextNode(h))
             parent.appendChild(s)
           })
         } else {
