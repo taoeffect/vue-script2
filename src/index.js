@@ -23,9 +23,7 @@ var Script2 = {
           Script2.p = Script2.p.then(() => {
             var s = document.createElement('script')
             var h = this.$el.innerHTML
-            h = h.replace(/&lt;/gi, '<')
-            h = h.replace(/&gt;/gi, '>')
-            h = h.replace(/&amp;/gi, '&')
+            h = h.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&amp;/gi, '&')
             s.type = 'text/javascript'
             s.appendChild(document.createTextNode(h))
             parent.appendChild(s)
