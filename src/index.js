@@ -22,7 +22,7 @@ var Script2 = {
         if (!this.src) {
           Script2.p = Script2.p.then(() => {
             var s = document.createElement('script')
-            var h = _this.$el.innerHTML;
+            var h = this.$el.innerHTML;
             h = h.replace(/&lt;/gi, '<');
             h = h.replace(/&gt;/gi, '>');
             h = h.replace(/&amp;/gi, '&');
