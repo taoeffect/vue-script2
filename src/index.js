@@ -55,8 +55,7 @@ var Script2 = {
     Script2.installed = true
   },
   load (src, opts = {parent: document.head}) {
-    return Script2.loaded[src] ? Promise.resolve(src)
-    : new Promise(function (resolve, reject) {
+    if (_.isUndefined(Script2.loaded[src])) Script2.loaded[src] = new Promise((resolve, reject) => {
       var s = document.createElement('script')
       // omit the special options that Script2 supports
       _.defaults2(s, _.omit(opts, ['unload', 'parent']), {type: 'text/javascript'})
@@ -79,6 +78,7 @@ var Script2 = {
       s.onerror = () => reject(new Error(src))
       opts.parent.appendChild(s)
     })
+    return Script2.loaded[src]
   }
 }
 
