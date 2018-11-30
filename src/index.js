@@ -2,7 +2,7 @@ var Script2 = {
   installed: false,
   p: Promise.resolve(),
   version: '2.0.3', // grunt will overwrite to match package.json
-  loaded: {}, // keys are the scripts that have been loaded
+  loaded: {}, // keys are the scripts that is loading or loaded, values are promises
   install (Vue, options = {}) {
     if (Script2.installed) return
     var customAttrs = ['unload']
@@ -27,13 +27,17 @@ var Script2 = {
             s.type = 'text/javascript'
             s.appendChild(document.createTextNode(h))
             parent.appendChild(s)
+            this.$emit('load') // any other proper way to do this or emit error?
           })
         } else {
           var opts = _.omitBy(_.pick(this, props), _.isUndefined)
           opts.parent = parent
           // this syntax results in an implicit return
-          var load = () => Script2.load(this.src, opts)
-          _.isUndefined(this.async)
+          var load = () => Script2.load(this.src, opts).then(
+            () => this.$emit('load'),
+            (err) => this.$emit('error', err)
+          )
+          !this.async
             ? Script2.p = Script2.p.then(load) // serialize execution
             : load()                           // inject immediately
         }
