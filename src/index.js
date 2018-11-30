@@ -55,7 +55,7 @@ var Script2 = {
     Script2.installed = true
   },
   load (src, opts = {parent: document.head}) {
-    if (_.isUndefined(Script2.loaded[src])) Script2.loaded[src] = new Promise((resolve, reject) => {
+    if (!Script2.loaded[src]) Script2.loaded[src] = new Promise((resolve, reject) => {
       var s = document.createElement('script')
       // omit the special options that Script2 supports
       _.defaults2(s, _.omit(opts, ['unload', 'parent']), {type: 'text/javascript'})
@@ -72,7 +72,7 @@ var Script2 = {
       }
       // inspiration from: https://github.com/eldargab/load-script/blob/master/index.js
       // and: https://github.com/ded/script.js/blob/master/src/script.js#L70-L82
-      s.onload = () => { Script2.loaded[src] = 1; resolve(src) }
+      s.onload = () => resolve(src)
       // IE should now support onerror and onload. If necessary, take a look
       // at this to add older IE support: http://stackoverflow.com/a/4845802/1781435
       s.onerror = () => reject(new Error(src))
