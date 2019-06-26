@@ -2,7 +2,7 @@ var Script2 = {
   installed: false,
   p: Promise.resolve(),
   version: '2.0.3', // grunt will overwrite to match package.json
-  loaded: {}, // keys are the scripts that have been loaded
+  loaded: {}, // keys are the scripts that is loading or loaded, values are promises
   install (Vue, options = {}) {
     if (Script2.installed) return
     var customAttrs = ['unload']
@@ -27,13 +27,17 @@ var Script2 = {
             s.type = 'text/javascript'
             s.appendChild(document.createTextNode(h))
             parent.appendChild(s)
+            this.$emit('load') // any other proper way to do this or emit error?
           })
         } else {
           var opts = _.omitBy(_.pick(this, props), _.isUndefined)
           opts.parent = parent
           // this syntax results in an implicit return
-          var load = () => Script2.load(this.src, opts)
-          _.isUndefined(this.async)
+          var load = () => Script2.load(this.src, opts).then(
+            () => this.$emit('load'),
+            (err) => this.$emit('error', err)
+          )
+          !this.async
             ? Script2.p = Script2.p.then(load) // serialize execution
             : load()                           // inject immediately
         }
@@ -55,8 +59,7 @@ var Script2 = {
     Script2.installed = true
   },
   load (src, opts = {parent: document.head}) {
-    return Script2.loaded[src] ? Promise.resolve(src)
-    : new Promise(function (resolve, reject) {
+    if (!Script2.loaded[src]) Script2.loaded[src] = new Promise((resolve, reject) => {
       var s = document.createElement('script')
       // omit the special options that Script2 supports
       _.defaults2(s, _.omit(opts, ['unload', 'parent']), {type: 'text/javascript'})
@@ -73,12 +76,13 @@ var Script2 = {
       }
       // inspiration from: https://github.com/eldargab/load-script/blob/master/index.js
       // and: https://github.com/ded/script.js/blob/master/src/script.js#L70-L82
-      s.onload = () => { Script2.loaded[src] = 1; resolve(src) }
+      s.onload = () => resolve(src)
       // IE should now support onerror and onload. If necessary, take a look
       // at this to add older IE support: http://stackoverflow.com/a/4845802/1781435
       s.onerror = () => reject(new Error(src))
       opts.parent.appendChild(s)
     })
+    return Script2.loaded[src]
   }
 }
 
