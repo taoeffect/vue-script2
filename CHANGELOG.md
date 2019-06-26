@@ -1,3 +1,9 @@
+### 2.1.0
+
+- Better handling of simultaneously loaded components ([#12](https://github.com/taoeffect/vue-script2/issues/12) - thanks **[@vgavro](https://github.com/vgavro)**)
+- Emit vue events for `loaded` and `error` ([#31](https://github.com/taoeffect/vue-script2/issues/31) - thanks **[@vgavro](https://github.com/vgavro)**)
+- Updated all dev dependencies and switched from uglify to terser
+
 ### 2.0.3
 
 - Fix inline-source containing HTML entities (via **[@andrispraulitis](https://github.com/andrispraulitis)**)

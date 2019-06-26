@@ -1,6 +1,6 @@
 {
   "name": "vue-script2",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "Brings back <script> to your favorite Single Page App!",
   "main": "dist/vue-script2.js",
   "jsnext:main": "src/index.js",
@@ -37,17 +37,36 @@
       "dist/*"
     ]
   },
+  "eslintConfig": {
+    "root": true,
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "extends": [
+      "standard"
+    ]
+  },
+  "eslintIgnore": [
+    "dist/*",
+    "ignored/*"
+  ],
+  "browserslist": "> 1% and since 2017 and not dead",
   "devDependencies": {
-    "babel-core": "6.26.3",
-    "babel-eslint": "8.2.3",
-    "babel-plugin-external-helpers": "6.22.0",
-    "babel-preset-env": "1.7.0",
-    "grunt": "1.0.2",
+    "@babel/core": "7.4.5",
+    "@babel/preset-env": "7.4.5",
+    "babel-eslint": "10.0.2",
+    "eslint": "6.0.1",
+    "eslint-config-standard": "12.0.0",
+    "eslint-plugin-import": "2.18.0",
+    "eslint-plugin-node": "9.1.0",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-standard": "4.0.0",
+    "grunt": "1.0.4",
     "grunt-check-dependencies": "1.0.0",
-    "grunt-standard": "3.1.0",
-    "load-grunt-tasks": "4.0.0",
-    "rollup": "0.58.2",
-    "rollup-plugin-babel": "3.0.4",
-    "rollup-plugin-uglify": "3.0.0"
+    "grunt-exec": "3.0.0",
+    "load-grunt-tasks": "5.0.0",
+    "rollup": "1.16.2",
+    "rollup-plugin-babel": "4.3.3",
+    "rollup-plugin-terser": "5.0.0"
   }
 }

@@ -1,6 +1,6 @@
 const rollup = require('rollup')
 const babel = require('rollup-plugin-babel')
-const uglify = require('rollup-plugin-uglify')
+const terser = require('rollup-plugin-terser').terser
 const fs = require('fs')
 
 module.exports = function (grunt) {
@@ -32,11 +32,14 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: pkg,
-    checkDependencies: {this: {options: {install: true}}},
+    checkDependencies: { this: { options: { install: true } } },
+    exec: {
+      eslint: 'node ./node_modules/eslint/bin/eslint.js "**/*.js"'
+    },
     rollup: {
       umd: {
         input: 'src/index.js',
-        plugins: [babel({exclude: './node_modules/**'})],
+        plugins: [babel({ exclude: './node_modules/**' })],
         output: {
           file: `dist/${pkg.name}.js`,
           format: 'umd',
@@ -47,8 +50,8 @@ module.exports = function (grunt) {
       ugly: {
         input: 'src/index.js',
         plugins: [
-          babel({exclude: './node_modules/**'}),
-          uglify({output: {preamble: banner}})
+          babel({ exclude: './node_modules/**' }),
+          terser({ output: { preamble: banner } })
         ],
         output: {
           file: `dist/${pkg.name}.min.js`,
@@ -56,8 +59,7 @@ module.exports = function (grunt) {
           name: camelCase(pkg.name)
         }
       }
-    },
-    standard: { dev: {} }
+    }
   })
 
   grunt.registerMultiTask('rollup', async function () {
@@ -69,7 +71,7 @@ module.exports = function (grunt) {
     done()
   })
 
-  grunt.registerTask('default', ['standard', 'rollup'])
+  grunt.registerTask('default', ['exec:eslint', 'rollup'])
 }
 
 function camelCase (s) {
