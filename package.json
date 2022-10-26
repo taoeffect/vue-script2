@@ -1,5 +1,5 @@
 {
-  "name": "vue-script2",
+  "name": "@gf/vue-script2",
   "version": "2.1.1",
   "description": "Brings back <script> to your favorite Single Page App!",
   "main": "dist/vue-script2.js",
