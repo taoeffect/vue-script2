@@ -1,10 +1,11 @@
 {
-  "name": "vue-script2",
-  "version": "2.1.0",
+  "name": "@gf/vue-script2",
+  "version": "2.1.1",
   "description": "Brings back <script> to your favorite Single Page App!",
   "main": "dist/vue-script2.js",
   "jsnext:main": "src/index.js",
   "scripts": {
+    "build": "webpack --config node_modules/webpack/bin/webpack.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Greg Slepak",
@@ -68,5 +69,9 @@
     "rollup": "1.16.2",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-terser": "5.0.0"
+  },
+  "dependencies": {
+    "webpack": "5.74.0",
+    "webpack-cli": "4.10.0"
   }
 }

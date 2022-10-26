@@ -84,7 +84,8 @@
 
     load(src) {
       let opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-        parent: document.head
+        parent: document.head,
+        attributes: []    
       };
 
       if (!Script2.loaded[src]) {
@@ -104,6 +105,12 @@
           s.src = src; // crossorigin in HTML and crossOrigin in the DOM per HTML spec
           // https://html.spec.whatwg.org/multipage/embedded-content.html#dom-img-crossorigin
 
+          if(opts.attributes.length > 0) 
+            opts.attributes.forEach(element => {
+              s.setAttribute(element.key,element.value)
+            });
+
+          
           if (opts.crossorigin) {
             s.crossOrigin = opts.crossorigin;
           } // inspiration from: https://github.com/eldargab/load-script/blob/master/index.js
